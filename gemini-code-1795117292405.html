@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إيصال لدفع حقوق الطابع</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      color: #111111;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ورقة A5 أفقية مطابقة لأبعاد ونسب الوثيقة الأصلية */
+    .page {
+      position: relative;
+      width: 210mm;
+      height: 148mm;
+      background: #ffffff;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.14);
+      overflow: hidden;
+      font-family: 'Amiri', 'Traditional Arabic', 'Simplified Arabic', serif;
+    }
+
+    /* الشعاران العلويان (المديرية العامة للضرائب) */
+    .logo {
+      position: absolute;
+      width: 14.5mm;
+      height: 15.5mm;
+    }
+
+    .logo-right {
+      top: 12.2%;
+      right: 9.2%;
+    }
+
+    .logo-left {
+      top: 13.0%;
+      left: 11.2%;
+    }
+
+    .logo svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* الترويسة الوسطى */
+    .header-text {
+      position: absolute;
+      top: 12.2%;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 14.2pt;
+      font-weight: 400;
+      line-height: 1.32;
+      color: #111111;
+    }
+
+    /* عنوان الإيصال */
+    .doc-title {
+      position: absolute;
+      top: 34.8%;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 17.5pt;
+      font-weight: 400;
+      color: #111111;
+    }
+
+    /* جدول البيانات: محاذاة يمين للعمودين تماماً كما في الوثيقة */
+    .fields-table {
+      position: absolute;
+      top: 48.2%;
+      right: 8.0%;
+      border-collapse: collapse;
+      direction: rtl;
+    }
+
+    .fields-table tr {
+      height: 4.85mm;
+    }
+
+    .fields-table td.label {
+      font-family: 'Amiri', 'Traditional Arabic', serif;
+      font-size: 13pt;
+      font-weight: 400;
+      text-align: right;
+      white-space: nowrap;
+      padding: 0 0 0 9.5mm;
+      vertical-align: middle;
+      line-height: 1.15;
+    }
+
+    .fields-table td.value {
+      text-align: right;
+      white-space: nowrap;
+      vertical-align: middle;
+      line-height: 1.15;
+    }
+
+    /* القيم الرقمية واللاتينية بخط Sans-Serif مطابق للأصل */
+    .val-code {
+      font-family: 'DejaVu Sans', 'Liberation Sans', Arial, Helvetica, sans-serif;
+      font-size: 10.2pt;
+      font-weight: 400;
+      letter-spacing: 0.1px;
+      direction: ltr;
+      unicode-bidi: isolate;
+      display: inline-block;
+    }
+
+    /* القيم العربية بخط نسخي كلاسيكي مطابق للأصل */
+    .val-ar {
+      font-family: 'Amiri', 'Traditional Arabic', serif;
+      font-size: 13pt;
+      font-weight: 400;
+    }
+
+    .amount-unit {
+      font-family: 'Amiri', 'Traditional Arabic', serif;
+      font-size: 13pt;
+      font-weight: 400;
+      margin-right: 3px;
+    }
+
+    /* رمز الاستجابة السريعة QR في الأسفل يساراً */
+    .qr-wrapper {
+      position: absolute;
+      left: 12.6%;
+      top: 66.2%;
+      width: 28.5mm;
+      height: 28.5mm;
+    }
+
+    .qr-wrapper svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* التذييل محاذي لهامش البيانات من اليمين */
+    .footer-text {
+      position: absolute;
+      top: 92.2%;
+      right: 8.0%;
+      text-align: right;
+      font-family: 'Amiri', 'Traditional Arabic', serif;
+      font-size: 12.2pt;
+      font-weight: 400;
+      color: #111111;
+      white-space: nowrap;
+    }
+
+    /* إعدادات الطباعة الدقيقة بمقاس A5 أفقي */
+    @media print {
+      @page {
+        size: A5 landscape;
+        margin: 0;
+      }
+
+      body {
+        background: #ffffff;
+        padding: 0;
+        min-height: auto;
+      }
+
+      .page {
+        box-shadow: none;
+        width: 210mm;
+        height: 148mm;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- تعريف شعار المديرية العامة للضرائب (م ع ض) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <g id="dgi-emblem" fill="#111111">
+        <!-- الهلال السفلي -->
+        <path d="M8.5 67.5 C10 92.5, 42 100, 51 99.8 C64 99.5, 92 90, 93 66.5 C90 85.5, 65 94, 51 94.2 C38 94.4, 13.5 86.5, 8.5 67.5 Z"/>
+        <!-- القوس العمودي الأيسر مع العطفة السفلية والنقطة -->
+        <path d="M43.2 7.2 C45.2 9.2, 44.8 14.5, 41.2 19.5 C35.5 27.5, 31.8 35.5, 33.2 43.2 C34.4 49.6, 40.5 53.5, 51.5 54.4 L56.8 54.8 C53.8 56.2, 45.2 56.2, 38.6 53.6 C32.0 50.8, 29.5 44.8, 30.2 36.8 C30.9 28.4, 35.8 20.4, 40.2 14.0 L38.0 13.0 L41.8 9.2 Z"/>
+        <!-- النقطة فوق الضاد -->
+        <circle cx="49.8" cy="51.2" r="2.1"/>
+        <!-- حرف العين (يمين أعلى) -->
+        <path d="M59.2 21.8 C55.4 18.6, 51.2 22.8, 50.4 27.6 C50.0 29.8, 52.8 31.4, 55.6 31.0 C58.4 30.6, 61.2 28.2, 62.0 26.8 C60.2 28.0, 56.8 28.2, 55.0 27.2 C53.8 26.5, 54.4 23.6, 56.6 23.0 C58.0 22.6, 59.0 23.4, 59.2 21.8 Z"/>
+        <path d="M55.2 29.8 C51.6 34.4, 49.4 41.5, 51.4 47.4 C53.6 53.6, 61.8 54.2, 67.6 47.2 C70.4 43.8, 72.2 39.8, 72.8 36.4 C70.8 40.8, 67.4 45.6, 63.2 47.6 C58.6 49.8, 54.6 48.2, 53.6 43.8 C52.8 39.8, 54.6 34.2, 57.6 30.6 Z"/>
+        <!-- حرف الضاد المتشابك أسفل الوسط -->
+        <path d="M48.5 39.2 C42.8 45.2, 36.5 54.8, 34.4 63.4 C32.6 70.6, 35.4 77.8, 41.2 79.4 C46.2 80.8, 50.2 76.2, 50.4 71.0 C53.8 72.2, 61.4 71.4, 65.2 66.8 C67.6 63.8, 66.6 59.6, 62.6 59.4 C57.8 59.2, 53.4 63.0, 51.8 66.8 C50.0 66.6, 48.0 65.8, 46.8 64.2 C46.4 66.2, 47.2 68.4, 48.8 69.8 C48.4 73.6, 45.4 76.2, 41.8 75.4 C37.8 74.5, 36.4 69.2, 37.6 63.2 C39.2 55.2, 44.6 46.2, 49.8 40.6 Z M54.8 66.8 C56.2 64.2, 59.4 62.4, 61.8 62.8 C63.4 63.1, 63.4 64.8, 61.8 66.2 C59.8 67.8, 56.6 67.6, 54.8 66.8 Z"/>
+      </g>
+    </defs>
+  </svg>
+
+  <div class="page">
+    <!-- الشعار الأيمن -->
+    <div class="logo logo-right" aria-label="شعار المديرية العامة للضرائب">
+      <svg viewBox="0 0 100 105"><use href="#dgi-emblem"/></svg>
+    </div>
+
+    <!-- الشعار الأيسر -->
+    <div class="logo logo-left" aria-label="شعار المديرية العامة للضرائب">
+      <svg viewBox="0 0 100 105"><use href="#dgi-emblem"/></svg>
+    </div>
+
+    <!-- الترويسة -->
+    <header class="header-text">
+      <div>الجمهورية الجزائرية الديمقراطية الشعبية</div>
+      <div>وزارة المالية</div>
+      <div>المديرية العامة للضرائب</div>
+    </header>
+
+    <!-- العنوان -->
+    <h1 class="doc-title">إيصال لدفع حقوق الطابع</h1>
+
+    <!-- البيانات -->
+    <table class="fields-table">
+      <tr>
+        <td class="label">رقم التعريف الوطني:</td>
+        <td class="value"><span class="val-code">100070616008800008</span></td>
+      </tr>
+      <tr>
+        <td class="label">رقم الإيصال:</td>
+        <td class="value"><span class="val-code">Q20260002511205</span></td>
+      </tr>
+      <tr>
+        <td class="label">نوع الوثيقة:</td>
+        <td class="value"><span class="val-ar">جواز السفر</span></td>
+      </tr>
+      <tr>
+        <td class="label">اللقب:</td>
+        <td class="value"><span class="val-ar">دحمان البصري</span></td>
+      </tr>
+      <tr>
+        <td class="label">الإسم:</td>
+        <td class="value"><span class="val-ar">سالم كران</span></td>
+      </tr>
+      <tr>
+        <td class="label">رقم المعاملة:</td>
+        <td class="value"><span class="val-code">ug5q8KsvxBj3YMBAHIEP</span></td>
+      </tr>
+      <tr>
+        <td class="label">رقم الطلب:</td>
+        <td class="value"><span class="val-code">QEK3ERcA8L</span></td>
+      </tr>
+      <tr>
+        <td class="label">رقم الترخيص:</td>
+        <td class="value"><span class="val-code">725430</span></td>
+      </tr>
+      <tr>
+        <td class="label">المبلغ:</td>
+        <td class="value"><span class="val-code">1 000,00</span><span class="amount-unit">دج</span></td>
+      </tr>
+      <tr>
+        <td class="label">تاريخ الدفع:</td>
+        <td class="value"><span class="val-code">19/11/2026 11:09:36</span></td>
+      </tr>
+    </table>
+
+    <!-- رمز الاستجابة السريعة QR المطابق للأصل -->
+    <div id="qr-container" class="qr-wrapper" aria-label="رمز التحقق QR"></div>
+
+    <!-- التذييل -->
+    <footer class="footer-text">
+      وثيقة ممنوحة بطلب المعني بالأمر لإستعمالها في حدود ما يسمح به القانون
+    </footer>
+  </div>
+
+  <!-- مولد رمز QR الأصلي (Version 5 - EC L - Mask 3) مطابق 100% للوثيقة -->
+  <script>
+    (function renderExactQR() {
+      const payload = "https://tabioucom.mf.gov.dz/edit?NIN=100070616008800008&NumQuit=Q20260002511205&lang=ar";
+
+      // 1. بناء تدفق البتات (Mode: Byte 0100, Length: 8 bits)
+      let bits = "0100" + payload.length.toString(2).padStart(8, "0");
+      for (let i = 0; i < payload.length; i++) {
+        bits += payload.charCodeAt(i).toString(2).padStart(8, "0");
+      }
+      bits += "0000";
+      while (bits.length % 8 !== 0) bits += "0";
+
+      const dataCW = [];
+      for (let i = 0; i < bits.length; i += 8) {
+        dataCW.push(parseInt(bits.slice(i, i + 8), 2));
+      }
+      const padBytes = [0xEC, 0x11];
+      let pIdx = 0;
+      while (dataCW.length < 108) {
+        dataCW.push(padBytes[pIdx++ % 2]);
+      }
+
+      // 2. تصحيح الأخطاء Reed-Solomon (26 كلمة لـ Version 5-L) على حقل GF(256)
+      const gfExp = new Array(512);
+      const gfLog = new Array(256);
+      let x = 1;
+      for (let i = 0; i < 255; i++) {
+        gfExp[i] = x;
+        gfLog[x] = i;
+        x <<= 1;
+        if (x & 0x100) x ^= 0x11d;
+      }
+      for (let i = 255; i < 512; i++) gfExp[i] = gfExp[i - 255];
+
+      const gmul = (a, b) => (a === 0 || b === 0) ? 0 : gfExp[gfLog[a] + gfLog[b]];
+
+      let gen = [1];
+      for (let i = 0; i < 26; i++) {
+        const ng = new Array(gen.length + 1).fill(0);
+        for (let j = 0; j < gen.length; j++) {
+          ng[j] ^= gen[j];
+          ng[j + 1] ^= gmul(gen[j], gfExp[i]);
+        }
+        gen = ng;
+      }
+
+      const rem = dataCW.concat(new Array(26).fill(0));
+      for (let i = 0; i < 108; i++) {
+        const c = rem[i];
+        if (c !== 0) {
+          for (let j = 1; j <= 26; j++) rem[i + j] ^= gmul(gen[j], c);
+        }
+      }
+
+      const allCW = dataCW.concat(rem.slice(108));
+      const allBits = [];
+      for (const cw of allCW) {
+        for (let b = 7; b >= 0; b--) allBits.push((cw >> b) & 1);
+      }
+      for (let i = 0; i < 7; i++) allBits.push(0);
+
+      // 3. بناء مصفوفة 37×37 (الإصدار 5)
+      const N = 37;
+      const grid = Array.from({ length: N }, () => new Uint8Array(N));
+      const func = Array.from({ length: N }, () => new Uint8Array(N));
+
+      function placeFinder(r0, c0) {
+        for (let dr = -1; dr <= 7; dr++) {
+          for (let dc = -1; dc <= 7; dc++) {
+            const r = r0 + dr, c = c0 + dc;
+            if (r >= 0 && r < N && c >= 0 && c < N) {
+              func[r][c] = 1;
+              if (dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6) {
+                grid[r][c] = (dr === 0 || dr === 6 || dc === 0 || dc === 6 || (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4)) ? 1 : 0;
+              }
+            }
+          }
+        }
+      }
+
+      placeFinder(0, 0);
+      placeFinder(0, 30);
+      placeFinder(30, 0);
+
+      // نمط المحاذاة عند (30, 30)
+      for (let dr = -2; dr <= 2; dr++) {
+        for (let dc = -2; dc <= 2; dc++) {
+          func[30 + dr][30 + dc] = 1;
+          grid[30 + dr][30 + dc] = (Math.abs(dr) === 2 || Math.abs(dc) === 2 || (dr === 0 && dc === 0)) ? 1 : 0;
+        }
+      }
+
+      // خطوط التوقيت
+      for (let i = 8; i <= 28; i++) {
+        func[6][i] = 1; grid[6][i] = (i % 2 === 0) ? 1 : 0;
+        func[i][6] = 1; grid[i][6] = (i % 2 === 0) ? 1 : 0;
+      }
+
+      // الوحدة الداكنة الثابتة
+      func[29][8] = 1;
+      grid[29][8] = 1;
+
+      // بتات التنسيق (EC=L, Mask=3 -> 111100010011101)
+      const fmt = "111100010011101";
+      const pos1 = [[8,0],[8,1],[8,2],[8,3],[8,4],[8,5],[8,7],[8,8],[7,8],[5,8],[4,8],[3,8],[2,8],[1,8],[0,8]];
+      const pos2 = [[36,8],[35,8],[34,8],[33,8],[32,8],[31,8],[30,8],[8,29],[8,30],[8,31],[8,32],[8,33],[8,34],[8,35],[8,36]];
+      for (let i = 0; i < 15; i++) {
+        const bit = Number(fmt[i]);
+        func[pos1[i][0]][pos1[i][1]] = 1; grid[pos1[i][0]][pos1[i][1]] = bit;
+        func[pos2[i][0]][pos2[i][1]] = 1; grid[pos2[i][0]][pos2[i][1]] = bit;
+      }
+
+      // وضع البيانات وتطبيق القناع 3: (r + c) % 3 === 0
+      let bi = 0, col = 36, up = true;
+      while (col > 0) {
+        if (col === 6) col--;
+        for (let step = 0; step < N; step++) {
+          const r = up ? (36 - step) : step;
+          for (const dc of [0, -1]) {
+            const c = col + dc;
+            if (!func[r][c]) {
+              let b = allBits[bi++];
+              if ((r + c) % 3 === 0) b ^= 1;
+              grid[r][c] = b;
+            }
+          }
+        }
+        col -= 2;
+        up = !up;
+      }
+
+      // 4. رسم المصفوفة كمسار SVG فائق الدقة
+      let d = "";
+      for (let r = 0; r < N; r++) {
+        let c = 0;
+        while (c < N) {
+          if (grid[r][c] === 1) {
+            const start = c;
+            while (c < N && grid[r][c] === 1) c++;
+            const w = c - start;
+            d += `M${start} ${r}h${w}v1h-${w}z`;
+          } else {
+            c++;
+          }
+        }
+      }
+
+      document.getElementById("qr-container").innerHTML =
+        `<svg viewBox="0 0 ${N} ${N}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">` +
+        `<rect width="${N}" height="${N}" fill="#ffffff"/>` +
+        `<path d="${d}" fill="#000000"/></svg>`;
+    })();
+  </script>
+</body>
+</html>
