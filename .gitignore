@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vercel
+deploy-payload.json
+deployment-files.json
+files-meta.json
